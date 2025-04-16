@@ -1,0 +1,331 @@
+
+@font-face {
+    font-family: 'Giaza';
+    src: url('Giaza.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Gistesy';
+    src: url('Gistesy.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Tan Monsieur', sans-serif;
+    background-color: #f8dada;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.title-with-bunny {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    padding-left: 20px;
+    margin-top: 150px;
+    margin-bottom: 10px;
+}
+
+.title-with-bunny h2 {
+    font-size: 5rem;
+    font-family: 'Giaza', serif;
+    text-transform: lowercase;
+    color: rgba(65, 16, 16, 0.31);
+    margin: 0;
+}
+
+.bunny-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+
+h1 {
+    font-size: 7rem;
+    margin-bottom: 70px;
+    position: relative;
+    display: inline-block;
+    font-family: 'Giaza', serif;
+    text-transform: lowercase;
+    color: rgba(65, 16, 16, 0.31);
+}
+
+h2 {
+    font-size: 5rem;
+    margin-top: 150px;
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+    font-family: 'Giaza', serif;
+    text-transform: lowercase;
+    color: rgba(65, 16, 16, 0.31);
+   
+    
+}
+
+#camera {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); 
+}
+
+.countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    z-index: 10;
+    display: none;
+    font-family: 'Orbitron', sans-serif; 
+}
+
+/* Buttons */
+.capture-btn, .download-btn {
+    padding: 15px 50px;
+    font-size: 1.5rem;
+    font-family: 'Gistesy', sans-serif;
+    background-color: #f8c5c5;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.capture-btn:hover, .download-btn:hover {
+    background-color: #f1a5a5;
+    transform: scale(1.05);
+}
+
+/* Animals */
+.animals {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+
+.camera-container-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
+
+.camera-container {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 5px solid #a8e6e6;
+}
+
+.cute-icon {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    z-index: 5;
+}
+
+.corgi {
+    top: -72px;
+    right: 20px;
+}
+
+.hamster {
+    top: 70%;
+    left: -70px;
+    transform: translateY(-50%);
+}
+
+.photobooth-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px 70px;
+    text-align: center;
+}
+
+
+.collage-container {
+    text-align: center;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+
+.collage-container h2 {
+    width: 100%;
+    text-align: left;
+    padding-left: 20px;
+}
+
+
+.bunny {
+    position: absolute;
+    
+    top: 60px;
+    
+    left: 250px;
+    width: 80px;
+    height: 80px;
+    background-image: url('rabbit.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 5;
+}
+
+.photo-strip {
+    display: flex;
+    justify-content: center;
+    margin: 100px 0 70px 0;
+    gap: 60px;
+    position: relative;
+}
+
+.photo-strip::before {
+    content: none;
+}
+
+.strip-left {
+    width: 250px;
+    padding: 15px;
+    background-color: #a8e6e6;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transform: rotate(25deg);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.strip-right {
+    width: 250px;
+    padding: 15px;
+    background-color: #a8e6e6;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transform: rotate(-25deg);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.strip-left {
+    transform-origin: right bottom;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+
+.strip-right {
+    transform-origin: left bottom;
+    margin-left: -30px;
+    margin-top: 30px;
+}
+
+.strip-photo {
+    width: 100%;
+    height: 150px;
+    background-color: #ddd;
+    overflow: hidden;
+}
+
+.strip-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 70px;
+}
+
+.download-btn {
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    margin: 5px;
+}
+
+/* Filter Options Styling */
+.filter-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    font-size: 1.2rem;
+    font-family: 'Gistesy', sans-serif;
+    background-color: #a8e6e6;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background-color: #86d3d3;
+    transform: scale(1.05);
+}
+
+.filter-btn.active {
+    background-color: #86d3d3;
+    box-shadow: 0 0 0 3px rgba(134, 211, 211, 0.4);
+    font-weight: bold;
+}
+
+
+.filter-normal {
+    filter: none;
+}
+
+.filter-bw {
+    filter: grayscale(100%);
+}
+
+.filter-grain {
+    filter: contrast(120%) brightness(110%);
+    
+}
+
+.filter-film {
+    filter: contrast(110%) saturate(85%) brightness(110%);
+}
+
+
+.vignette-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.4) 140%);
+    pointer-events: none;
+    z-index: 3;
+}

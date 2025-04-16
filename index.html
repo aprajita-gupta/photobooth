@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://api.fontshare.com/v2/css?f[]=tan-monsieur@400&display=swap" rel="stylesheet">
+    <!-- Add Giaza font -->
+    <link href="https://api.fontshare.com/v2/css?f[]=giaza@400&display=swap" rel="stylesheet">
+    <title>Photobooth</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="photobooth-container">
+        <h1>photobooth</h1>
+        
+        <div class="camera-container-wrapper">
+            <img src="dog.png" alt="Corgi" class="cute-icon corgi">
+            <div class="camera-container">
+                <video id="camera" autoplay playsinline></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+                <div id="countdown" class="countdown"></div>
+            </div>
+            <img src="rabbit.png" alt="Rabbit" class="cute-icon hamster">
+        </div>
+        
+        <div class="filter-options">
+            <button class="filter-btn active" data-filter="normal">normal</button>
+            <button class="filter-btn" data-filter="bw">b&w</button>
+            <button class="filter-btn" data-filter="grain">grain</button>
+            <button class="filter-btn" data-filter="film">film</button>
+        </div>
+        
+        <button id="capture-btn" class="capture-btn">click!</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

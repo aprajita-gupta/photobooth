@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://api.fontshare.com/v2/css?f[]=tan-monsieur@400&display=swap" rel="stylesheet">
+    <title>Your Photobooth Strip</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="collage-container">
+        <div class="title-with-bunny">
+            <h2>PHOTOBOOTH</h2>
+            <img src="rabbit.png" alt="Bunny" class="bunny-img">
+        </div>
+        <div id="photo-collage" class="photo-strip">
+            <div class="strip-left">
+                <div class="strip-photo" id="strip-left-1"></div>
+                <div class="strip-photo" id="strip-left-2"></div>
+                <div class="strip-photo" id="strip-left-3"></div>
+            </div>
+            
+            <div class="strip-right">
+                <div class="strip-photo" id="strip-right-1"></div>
+                <div class="strip-photo" id="strip-right-2"></div>
+                <div class="strip-photo" id="strip-right-3"></div>
+            </div>
+        </div>
+        
+        <div class="download-buttons">
+            <button id="download-strip-btn" class="download-btn">download strip</button>
+            <button id="download-photos-btn" class="download-btn">download pics</button>
+            <button id="new-session-btn" class="download-btn">click again</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const capturedPhotosData = JSON.parse(sessionStorage.getItem('capturedPhotos')) || [];
+            const photoStrip = sessionStorage.getItem('photoStrip');
+            
+            // Display individual photos in the strips
+            if (capturedPhotosData.length > 0) {
+                // Left strip
+                for (let i = 0; i < capturedPhotosData.length && i < 3; i++) {
+                    const photoDiv = document.getElementById(`strip-left-${i+1}`);
+                    // Handle both old format (string) and new format (object with image and filter)
+                    const photoSrc = typeof capturedPhotosData[i] === 'string' ? 
+                        capturedPhotosData[i] : capturedPhotosData[i].image;
+                    photoDiv.innerHTML = `<img src="${photoSrc}" alt="Photo ${i+1}">`;
+                }
+                
+                // Right strip (using same photos)
+                for (let i = 0; i < capturedPhotosData.length && i < 3; i++) {
+                    const photoDiv = document.getElementById(`strip-right-${i+1}`);
+                    // Handle both old format (string) and new format (object with image and filter)
+                    const photoSrc = typeof capturedPhotosData[i] === 'string' ? 
+                        capturedPhotosData[i] : capturedPhotosData[i].image;
+                    photoDiv.innerHTML = `<img src="${photoSrc}" alt="Photo ${i+1}">`;
+                }
+            }
+            
+            // Download strip button functionality
+            document.getElementById('download-strip-btn').addEventListener('click', () => {
+                // Always generate the strip fresh when the button is clicked
+                const photos = capturedPhotosData.map(photo => {
+                    return typeof photo === 'string' ? photo : photo.image;
+                });
+                createAndDownloadPhotoStrip(photos);
+            });
+            
+            // Download individual photos
+            document.getElementById('download-photos-btn').addEventListener('click', () => {
+                if (capturedPhotosData.length > 0) {
+                    capturedPhotosData.forEach((photo, index) => {
+                        const photoSrc = typeof photo === 'string' ? photo : photo.image;
+                        const link = document.createElement('a');
+                        link.href = photoSrc;
+                        link.download = `photobooth_photo_${index+1}.png`;
+                        document.body.appendChild(link);
+                        
+                        // Add a small delay between downloads
+                        setTimeout(() => {
+                            link.click();
+                            document.body.removeChild(link);
+                        }, 300 * index);
+                    });
+                }
+            });
+            
+            // New session button
+            document.getElementById('new-session-btn').addEventListener('click', () => {
+                sessionStorage.removeItem('capturedPhotos');
+                sessionStorage.removeItem('photoStrip');
+                window.location.href = 'index.html';
+            });
+            
+            // Helper function to create and download collage if needed
+            function createAndDownloadPhotoStrip(photos) {
+                if (photos.length === 0) return;
+                
+                const stripCanvas = document.createElement('canvas');
+                stripCanvas.width = 800;
+                stripCanvas.height = 700;
+                const ctx = stripCanvas.getContext('2d');
+                
+                // Fill with background color
+                ctx.fillStyle = '#f8dada';
+                ctx.fillRect(0, 0, stripCanvas.width, stripCanvas.height);
+                
+                // Draw title
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 40px "Tan Monsieur", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText('PHOTOBOOTH', 20, 50);
+                
+                // Draw photo strips
+                const stripWidth = 220;
+                const stripPadding = 15;
+                const photoHeight = 150;
+                const gap = 15;
+                
+                // Strip backgrounds
+                ctx.fillStyle = '#a8e6e6';
+                ctx.fillRect(100, 80, stripWidth, 3 * photoHeight + 2 * gap + 2 * stripPadding);
+                ctx.fillRect(100 + stripWidth + 60, 80, stripWidth, 3 * photoHeight + 2 * gap + 2 * stripPadding);
+                
+                // Create a counter to track when all images have been processed
+                let loadedImages = 0;
+                const totalImagesToLoad = (photos.length * 2) + 1; // Photos * 2 (for left and right) + bunny
+                
+                // Draw the photos and handle the download after all images loaded
+                function drawPhotosAndDownload() {
+                    loadedImages++;
+                    
+                    // Only proceed when all images are loaded
+                    if (loadedImages === totalImagesToLoad) {
+                        // Generate the final image and trigger download
+                        const stripImage = stripCanvas.toDataURL('image/png');
+                        
+                        // Create download link
+                        const link = document.createElement('a');
+                        link.href = stripImage;
+                        link.download = 'photobooth_strip.png';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        // Store in session storage for future use
+                        sessionStorage.setItem('photoStrip', stripImage);
+                    }
+                }
+                
+                // Add the bunny image - updated position to be next to PHOTOBOOTH text
+                const bunny = new Image();
+                bunny.onload = () => {
+                    ctx.drawImage(bunny, 230, 20, 80, 80); // Positioned next to "PHOTOBOOTH" text
+                    drawPhotosAndDownload();
+                };
+                bunny.onerror = () => {
+                    console.error('Error loading bunny image');
+                    drawPhotosAndDownload(); // Continue even if image fails to load
+                };
+                bunny.src = 'rabbit.png';
+                
+                // Process each photo for both left and right strips
+                for (let i = 0; i < photos.length && i < 3; i++) {
+                    // Left strip photo
+                    const leftImg = new Image();
+                    leftImg.onload = () => {
+                        ctx.drawImage(
+                            leftImg, 
+                            100 + stripPadding, 
+                            80 + stripPadding + i * (photoHeight + gap), 
+                            stripWidth - 2 * stripPadding, 
+                            photoHeight
+                        );
+                        drawPhotosAndDownload();
+                    };
+                    leftImg.onerror = () => {
+                        console.error(`Error loading left image ${i}`);
+                        drawPhotosAndDownload(); // Continue even if image fails to load
+                    };
+                    leftImg.src = photos[i];
+                    
+                    // Right strip photo
+                    const rightImg = new Image();
+                    rightImg.onload = () => {
+                        ctx.drawImage(
+                            rightImg, 
+                            100 + stripWidth + 60 + stripPadding, 
+                            80 + stripPadding + i * (photoHeight + gap), 
+                            stripWidth - 2 * stripPadding, 
+                            photoHeight
+                        );
+                        drawPhotosAndDownload();
+                    };
+                    rightImg.onerror = () => {
+                        console.error(`Error loading right image ${i}`);
+                        drawPhotosAndDownload(); // Continue even if image fails to load
+                    };
+                    rightImg.src = photos[i];
+                }
+            }
+        });
+    </script>
+</body>
+</html>
